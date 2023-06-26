@@ -1,13 +1,14 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:apirequest/beer/BeerUI.dart';
 import 'package:apirequest/car/CarUI.dart';
 import 'package:apirequest/car/CarUISingle.dart';
 import 'package:apirequest/car/PostCar.dart';
 
-import 'beer/BeerUI.dart';
+/*import 'beer/BeerUI.dart';
 import 'car/CarUI.dart';
 import 'car/CarUISingle.dart';
-import 'car/PostCar.dart';
+import 'car/PostCar.dart';*/
 
 void main() {
   runApp(MyApp());
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: AppScrollBehavior(),
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -52,4 +54,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [BeerUI(), CarUI(), CarUISingle(), PostCar()],
         ));
   }
+}
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+      };
 }

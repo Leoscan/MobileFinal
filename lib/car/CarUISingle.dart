@@ -57,7 +57,6 @@ class _CarUISingle extends State {
                   } else {
                     return noDataView("2 Something went wrong");
                   }
-                  break;
                 }
               case ConnectionState.none:
                 {

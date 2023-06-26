@@ -82,7 +82,7 @@ Future<CarListModel> callAPI(CarModel car) async {
     print('errors : $error');
     return error.toString();
   });
-  throw "Erro";
+  throw "Erro1";
 }
 
 /*Future<CarListModel> postCar(int idd, String modell, double pricee) async {
