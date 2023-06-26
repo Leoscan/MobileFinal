@@ -60,7 +60,7 @@ class _BeerUI extends State {
                 }
               case ConnectionState.none:
                 {
-                  break;
+                  return loadingView();
                 }
             }
             throw "Error1";

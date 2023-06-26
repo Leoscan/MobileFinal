@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:apirequest/beer/BeerUI.dart';
@@ -11,6 +13,7 @@ import 'car/CarUISingle.dart';
 import 'car/PostCar.dart';*/
 
 void main() {
+  HttpOverrides.global = CustomHttpOverrides();
   runApp(MyApp());
 }
 
@@ -63,4 +66,11 @@ class AppScrollBehavior extends MaterialScrollBehavior {
         PointerDeviceKind.mouse,
         PointerDeviceKind.trackpad,
       };
+}
+class CustomHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
 }
