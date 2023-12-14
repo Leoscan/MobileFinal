@@ -69,6 +69,30 @@ EventosList postFromJson(String str) {
   return EventosList.fromJson(jsonData);
 }
 
+Future<List<Map<String, dynamic>>> collectFeriados() async {
+  final response = await http.get(Uri.parse(feriados));
+  if (response.statusCode == 200) {
+    print("response is 200");
+    List<Map<String, dynamic>> jsonData =
+        List<Map<String, dynamic>>.from(json.decode(response.body));
+    //print(jsonData);
+    return jsonData;
+  }
+  return [];
+}
+
+Future<List<Map<String, dynamic>>> collectEvents() async {
+  final response = await http.get(Uri.parse(eventoGet));
+  if (response.statusCode == 200) {
+    print("response is 200");
+    List<Map<String, dynamic>> jsonData =
+        List<Map<String, dynamic>>.from(json.decode(response.body));
+    //print(jsonData);
+    return jsonData;
+  }
+  return [];
+}
+
 Future<EventosList> callAPI(Eventos evento) async {
   //eventoModel evento = eventoModel(id: "15", model: "teste", price: 17.0);
   print(evento.toJson());

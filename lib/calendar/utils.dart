@@ -1,8 +1,7 @@
 import 'dart:collection';
 import 'package:table_calendar/table_calendar.dart';
-import 'dart:convert';
 import 'dart:async';
-import 'package:http/http.dart' as http;
+import 'package:apirequest/conexao/EndPoints.dart';
 
 class Event {
   final String title;
@@ -16,20 +15,6 @@ final kEvents = LinkedHashMap<DateTime, List<Event>>(
   hashCode: getHashCode,
 )..addAll(_kEventSource);
 
-Map<DateTime, List<Event>> _kEventSource = {};
-Future<List<Map<String, dynamic>>> feriados() async {
-  String url = 'https://date.nager.at/api/v3/PublicHolidays/2023/BR';
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    print("response is 200");
-    List<Map<String, dynamic>> jsonData =
-        List<Map<String, dynamic>>.from(json.decode(response.body));
-    //print(jsonData);
-    return jsonData;
-  }
-  return [];
-}
-
 int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
@@ -42,8 +27,9 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
   );
 }
 
+Map<DateTime, List<Event>> _kEventSource = {};
 Future<void> initializeEventSource() async {
-  List<Map<String, dynamic>> feriadoList = await feriados();
+  List<Map<String, dynamic>> feriadoList = await collectFeriados();
   _kEventSource = Map.fromIterable(feriadoList,
       key: (item) {
         DateTime date = DateTime.parse(item['date']).toLocal();
@@ -52,6 +38,20 @@ Future<void> initializeEventSource() async {
       },
       value: (item) => [Event(item['localName'])]);
   kEvents.addAll(_kEventSource);
+  initializeSource();
+}
+
+Map<DateTime, List<Event>> _Source = {};
+Future<void> initializeSource() async {
+  List<Map<String, dynamic>> eventosList = await collectEvents();
+  _Source = Map.fromIterable(eventosList,
+      key: (item) {
+        DateTime date = DateTime.parse(item['data']).toLocal();
+        ;
+        return date;
+      },
+      value: (item) => [Event(item['model'])]);
+  kEvents.addAll(_Source);
 }
 
 final kToday = DateTime.now();

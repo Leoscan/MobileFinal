@@ -51,8 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
           physics: BouncingScrollPhysics(),
           controller: _controller,
           children: [
-            EventoUI(),
             TableEventsExample(),
+            EventoUI(),
             FeriadoUI(),
             EventosPost()
           ],
