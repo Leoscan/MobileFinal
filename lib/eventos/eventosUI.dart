@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'BeerModel.dart';
-import 'package:apirequest/beer/BeerListModel.dart';
+import 'package:apirequest/eventos/eventosList.dart';
+import 'package:apirequest/eventos/eventos.dart';
 import 'package:apirequest/conexao/EndPoints.dart';
 
-class BeerUI extends StatefulWidget {
+class EventoUI extends StatefulWidget {
   @override
-  _BeerUI createState() => _BeerUI();
+  _EventoUI createState() => _EventoUI();
 }
 
-class _BeerUI extends State {
-  Future<BeerListModel>? beerListFuture;
+class _EventoUI extends State {
+  Future<EventosList>? evListFuture;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: FutureBuilder<BeerListModel>(
-          future: beerListFuture,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
+      child: FutureBuilder<EventosList>(
+          future: evListFuture,
+          builder: (context, snapshot) {
             // Com switch conseguimos identificar em que ponto da conexão estamos
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -33,14 +33,14 @@ class _BeerUI extends State {
                   // snapshot representa um instantâneo (foto) dos dados recebidos
                   // Se o snapshot tem informações, apresenta
                   if (snapshot.hasData) {
-                    if (snapshot.data!.beerList != null) {
-                      if (snapshot.data!.beerList.length > 0) {
+                    if (snapshot.data!.evList != null) {
+                      if (snapshot.data!.evList!.length > 0) {
                         // preenche a lista
                         return ListView.builder(
-                            itemCount: snapshot.data!.beerList.length,
+                            itemCount: snapshot.data!.evList!.length,
                             itemBuilder: (context, index) {
                               return generateColum(
-                                  snapshot.data!.beerList[index]);
+                                  snapshot.data!.evList![index]);
                             });
                       } else {
                         // Em caso de retorno de lista vazia
@@ -52,7 +52,8 @@ class _BeerUI extends State {
                     }
                   } else if (snapshot.hasError) {
                     // Apresenta mensagem se teve algum erro
-                    return noDataView("1 beer Something went wrong: " +
+                    print(snapshot.error);
+                    return noDataView("1 car Something went wrong: " +
                         snapshot.error.toString());
                   } else {
                     return noDataView("2 Something went wrong");
@@ -60,10 +61,10 @@ class _BeerUI extends State {
                 }
               case ConnectionState.none:
                 {
-                  return loadingView();
+                  break;
                 }
             }
-            throw "Error1";
+            throw "Error";
           }),
     );
   }
@@ -77,22 +78,21 @@ class _BeerUI extends State {
         setState(() {
           // chama a API para apresentar os dados
           // Aqui estamos no initState (ao iniciar a aplicação/tela), mas pode ser iniciado com um click de botão.
-          beerListFuture = getBeerListData();
+          evListFuture = geteventoListData();
         });
       }
     });
     super.initState();
   }
 
-  Widget generateColum(BeerModel item) => Card(
+  Widget generateColum(Eventos item) => Card(
         child: ListTile(
-          leading: Image.network(item.imageUrl),
           title: Text(
-            item.name,
+            item.model!,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           subtitle:
-              Text(item.tagline, style: TextStyle(fontWeight: FontWeight.w600)),
+              Text(item.data, style: TextStyle(fontWeight: FontWeight.w600)),
         ),
       );
 }

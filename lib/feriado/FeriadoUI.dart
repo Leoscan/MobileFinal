@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:apirequest/car/CarModel.dart';
-import 'package:apirequest/car/CarListModel.dart';
+import 'Feriado.dart';
+import 'package:apirequest/feriado/FeriadoList.dart';
 import 'package:apirequest/conexao/EndPoints.dart';
 
-class CarUI extends StatefulWidget {
+class FeriadoUI extends StatefulWidget {
   @override
-  _CarUI createState() => _CarUI();
+  _FeriadoUI createState() => _FeriadoUI();
 }
 
-class _CarUI extends State {
-  Future<CarListModel>? carListFuture;
+class _FeriadoUI extends State {
+  Future<FeriadoList>? feriadoListFuture;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: FutureBuilder<CarListModel>(
-          future: carListFuture,
-          builder: (context, snapshot) {
+      child: FutureBuilder<FeriadoList>(
+          future: feriadoListFuture,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
             // Com switch conseguimos identificar em que ponto da conexão estamos
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -33,14 +33,14 @@ class _CarUI extends State {
                   // snapshot representa um instantâneo (foto) dos dados recebidos
                   // Se o snapshot tem informações, apresenta
                   if (snapshot.hasData) {
-                    if (snapshot.data!.carList != null) {
-                      if (snapshot.data!.carList!.length > 0) {
+                    if (snapshot.data!.feriadoList != null) {
+                      if (snapshot.data!.feriadoList.length > 0) {
                         // preenche a lista
                         return ListView.builder(
-                            itemCount: snapshot.data!.carList!.length,
+                            itemCount: snapshot.data!.feriadoList.length,
                             itemBuilder: (context, index) {
                               return generateColum(
-                                  snapshot.data!.carList![index]);
+                                  snapshot.data!.feriadoList[index]);
                             });
                       } else {
                         // Em caso de retorno de lista vazia
@@ -52,8 +52,7 @@ class _CarUI extends State {
                     }
                   } else if (snapshot.hasError) {
                     // Apresenta mensagem se teve algum erro
-                    print(snapshot.error);
-                    return noDataView("1 car Something went wrong: " +
+                    return noDataView("1 feriado Something went wrong: " +
                         snapshot.error.toString());
                   } else {
                     return noDataView("2 Something went wrong");
@@ -61,10 +60,10 @@ class _CarUI extends State {
                 }
               case ConnectionState.none:
                 {
-                  break;
+                  return loadingView();
                 }
             }
-            throw "Error";
+            throw "Error1";
           }),
     );
   }
@@ -78,21 +77,21 @@ class _CarUI extends State {
         setState(() {
           // chama a API para apresentar os dados
           // Aqui estamos no initState (ao iniciar a aplicação/tela), mas pode ser iniciado com um click de botão.
-          carListFuture = getCarListData();
+          feriadoListFuture = getferiadoListData();
         });
       }
     });
     super.initState();
   }
 
-  Widget generateColum(CarModel item) => Card(
+  Widget generateColum(Feriado item) => Card(
         child: ListTile(
           title: Text(
-            item.model!,
+            item.localName,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
-          subtitle: Text(item.id.toString(),
-              style: TextStyle(fontWeight: FontWeight.w600)),
+          subtitle:
+              Text(item.date, style: TextStyle(fontWeight: FontWeight.w600)),
         ),
       );
 }

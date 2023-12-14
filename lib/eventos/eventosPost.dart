@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:apirequest/car/CarModel.dart';
-import 'package:apirequest/car/CarListModel.dart';
+import 'package:apirequest/eventos/eventosList.dart';
+import 'package:apirequest/eventos/eventos.dart';
 import 'package:apirequest/conexao/EndPoints.dart';
 
-class PostCar extends StatefulWidget {
+class EventosPost extends StatefulWidget {
   @override
-  _PostCar createState() => _PostCar();
+  _EventosPost createState() => _EventosPost();
 }
 
-class _PostCar extends State {
+class _EventosPost extends State {
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  CarModel car = new CarModel();
-  Future<CarListModel>? carListFuture;
+  Eventos evento = new Eventos();
+  Future<EventosList>? eventoListFuture;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -22,7 +22,7 @@ class _PostCar extends State {
             TextFormField(
                 keyboardType: TextInputType.number,
                 onSaved: (String? inValue) {
-                  this.car.id = int.parse(inValue!);
+                  this.evento.id = int.parse(inValue!);
                 },
                 decoration: InputDecoration(labelText: "Id")),
             TextFormField(
@@ -34,24 +34,24 @@ class _PostCar extends State {
                   return null;
                 },
                 onSaved: (String? inValue) {
-                  this.car.model = inValue!;
+                  this.evento.model = inValue!;
                 },
-                decoration: InputDecoration(labelText: "Model")),
+                decoration: InputDecoration(labelText: "titulo")),
             TextFormField(
                 keyboardType: TextInputType.number,
                 onSaved: (String? inValue) {
-                  this.car.price = double.parse(inValue!);
+                  this.evento.data = DateTime.parse(inValue!);
                 },
-                decoration: InputDecoration(labelText: "Price")),
+                decoration: InputDecoration(labelText: "data")),
             ElevatedButton(
               child: Text("Save"),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  print("Id: ${car.id}");
-                  print("Model: ${car.model}");
-                  print("Price: ${car.price}");
-                  callAPI(car);
+                  print("Id: ${evento.id}");
+                  print("titulo: ${evento.model}");
+                  print("data: ${evento.data}");
+                  callAPI(evento);
                 }
               },
             )

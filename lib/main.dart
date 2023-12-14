@@ -1,16 +1,12 @@
 import 'dart:io';
 
+import 'package:apirequest/conexao/EndPoints.dart';
+import 'package:apirequest/eventos/eventosUI.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:apirequest/beer/BeerUI.dart';
-import 'package:apirequest/car/CarUI.dart';
-import 'package:apirequest/car/CarUISingle.dart';
-import 'package:apirequest/car/PostCar.dart';
-
-/*import 'beer/BeerUI.dart';
-import 'car/CarUI.dart';
-import 'car/CarUISingle.dart';
-import 'car/PostCar.dart';*/
+import 'package:apirequest/feriado/FeriadoUI.dart';
+import 'package:apirequest/calendar/calendario.dart';
+import 'package:apirequest/eventos/eventosPost.dart';
 
 void main() {
   HttpOverrides.global = CustomHttpOverrides();
@@ -54,7 +50,12 @@ class _MyHomePageState extends State<MyHomePage> {
           scrollDirection: Axis.horizontal,
           physics: BouncingScrollPhysics(),
           controller: _controller,
-          children: [BeerUI(), CarUI(), CarUISingle(), PostCar()],
+          children: [
+            EventoUI(),
+            TableEventsExample(),
+            FeriadoUI(),
+            EventosPost()
+          ],
         ));
   }
 }
@@ -67,10 +68,12 @@ class AppScrollBehavior extends MaterialScrollBehavior {
         PointerDeviceKind.trackpad,
       };
 }
-class CustomHttpOverrides extends HttpOverrides{
+
+class CustomHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
